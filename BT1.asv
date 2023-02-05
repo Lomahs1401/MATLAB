@@ -1,0 +1,41 @@
+clear
+close all
+clc
+
+promptLengthSignal = 'Nhap so luong tin hieu mau L (mac dinh L = 100000) : ';
+promptMean = 'Nhap GTTB (Mean): ';
+promptStd = 'Nhap do lech chuan (Standard Deviation): ';
+L = input(promptLengthSignal);
+if isempty(L)
+    L = 100000;
+end
+
+mean = input(promptMean);
+if isempty(mean)
+    mean = 15;
+end
+
+std = input(promptStd);
+if isempty(std)
+    std = 8;
+end
+
+fs = 44100;
+
+f=500;
+    t=1:L
+    y=sin(2*pi*f*t); 
+    observations = mean + std * randn(1, L);
+    plot(observations);
+    xlabel('n');
+    ylabel('x[n]');
+    title('Random Signal');
+    grid on;
+    sound(y, fs)
+
+%observations = plotRandomSignal(mean, std, L);
+
+
+
+
+        
