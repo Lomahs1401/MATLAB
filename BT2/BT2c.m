@@ -3,9 +3,9 @@ close all
 clc
 
 % ------------------------------------------------------------
-% b. Select every other sample in x which reduces the sampling rate
-% by a factor of two. Now listen to the new sound array using the sound
-% function at half the sampling rate
+% b. Select every fourth sample in x which reduces the sampling rate
+% by a factor of four. Listen to the resulting sound array using the sound
+% function at quarter the sampling rate
 
 load handel;
 x=y;

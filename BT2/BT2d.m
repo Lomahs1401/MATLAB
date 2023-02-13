@@ -3,9 +3,7 @@ close all
 clc
 
 % ------------------------------------------------------------
-% b. Select every other sample in x which reduces the sampling rate
-% by a factor of two. Now listen to the new sound array using the sound
-% function at half the sampling rate
+% d. Save the generated sound in part(c) using the wavwrite function
 
 load handel;
 x=y;
