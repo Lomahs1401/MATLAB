@@ -13,6 +13,6 @@ t=(1:n)/fs; %total number of data points
 y=sin(2*pi*f*t);
 
 %generate sound
-sound(y, fs);
+sound(y);
 filename='sound.wav';
 audiowrite(filename, y, fs)

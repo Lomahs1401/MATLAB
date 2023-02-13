@@ -5,5 +5,8 @@ function plotRandomSignal(mean, std, N)
     ylabel('x[n]');
     title('Random Signal');
     grid on;
-    sound(observations)
+    Fs = 44100;
+    sound(observations, Fs)
+    filename='sound.wav';
+    audiowrite(filename, observations, Fs)
 end
