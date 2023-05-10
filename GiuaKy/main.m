@@ -112,6 +112,7 @@ for i = 1 : length(listAudio)
     % ------------------- Kết quả theo miền thời gian ------------------
     subplot(5, 2, 1); 
     plot(voiced_time(31, :), voiced(31, :)); 
+    
     xlabel('Time(s)'); 
     ylabel('Amplitude'); 
     title('Voiced');
@@ -163,4 +164,9 @@ for i = 1 : length(listAudio)
     xlabel('Times(s)'); 
     ylabel('Amplitude'); 
     title('Speech signal');
+
+    subplot(5, 2, [7, 8]);
+    plot(t, fftV);
+    subplot(5, 2, [9, 10]);
+    plot(t, fftU);
 end
