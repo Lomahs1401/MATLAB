@@ -6,11 +6,18 @@ close all;
 % su dung ham tu tuong quan (autocorrelation function)
 
 %% Danh sách các file audio cần duyệt
+% listAudio = [
+%     "studio_M1.wav"; 
+%     "studio_F1.wav"; 
+%     "phone_M1.wav"; 
+%     "phone_F1.wav"
+% ];
+
 listAudio = [
-    "studio_M1.wav"; 
-    "studio_F1.wav"; 
-    "phone_M1.wav"; 
-    "phone_F1.wav"
+    "studio_M1.wav";
+    "studio_F1.wav";
+    "phone_M1.wav";
+    "phone_F1.wav";
 ];
 
 %% Thiết lập các thông số
@@ -68,7 +75,8 @@ for i = 1 : length(listAudio)
         % Lấy các khung làm đối số truyền vào hàm tính tự tương quan ACF
         acf = ACF(frames(x, :));
 
-        % chuẩn hóa (normalized) để biên độ nằm trong ngưỡng 0->1
+        % chuẩn hóa (normalized) để biên độ cực đại toàn cục luôn bằng 1
+        % -> Thuận tiện cho việc so sánh ngưỡng
         acf = acf / max(acf);
         
         % Lấy acf của khung vừa tính được truyền vào hàm để tìm biên độ cực
@@ -77,8 +85,7 @@ for i = 1 : length(listAudio)
         
         % Giá trị độ trễ (lag) tại điểm cực đại có biên độ lớn nhất của
         % hàm tự tương quan chính là chu kỳ cơ bản T0 của khung tín hiệu
-        % F0 = 1 / localMaxPeakIndex * frameDuration;
-        F0 = Fs / localMaxPeakIndex;
+        F0 = Fs / (localMaxPeakIndex + 1);
 
         if(localMaxPeakValue >= threshold && F0 > FMin && F0 < FMax) 
             F(x) = F0;
@@ -96,40 +103,40 @@ for i = 1 : length(listAudio)
     end
 
     %% Lọc trung vị (Median smoothing)
-    filtered_ = medianFilter(filterSize, F);
+    filtered_F0 = medianFilter(filterSize, F);
 
     %% Xuất đồ thị
     nameFigure = listAudio(i);
     figure('Name', nameFigure);
     
     % ------------------- Kết quả theo miền thời gian ------------------
-    subplot(4, 2, 1); 
-    plot(voiced_time(30, :), voiced(30, :)); 
+    subplot(5, 2, 1); 
+    plot(voiced_time(31, :), voiced(31, :)); 
     xlabel('Time(s)'); 
     ylabel('Amplitude'); 
     title('Voiced');
 
-    subplot(4, 2, 2); 
-    plot(unvoiced_time(30, :), unvoiced(30, :)); 
+    subplot(5, 2, 2); 
+    plot(unvoiced_time(31, :), unvoiced(31, :)); 
     xlabel('Time(s)'); 
     ylabel('Amplitude'); 
     title('Unvoiced');
 
-    subplot(4, 2, 3); 
-    plot(voiced_time(30, :), acf_of_voiced(30, :)); 
+    subplot(5, 2, 3); 
+    plot(voiced_time(31, :), acf_of_voiced(31, :)); 
     xlabel('Time(s)'); 
     ylabel('Amplitude');
     yline(threshold, 'r-', 'Threshold')
     title('ACF of voiced');
 
-    subplot(4, 2, 4); 
-    plot(unvoiced_time(30, :), acf_of_unvoiced(30, :)); 
+    subplot(5, 2, 4); 
+    plot(unvoiced_time(31, :), acf_of_unvoiced(31, :)); 
     xlabel('Time(s)'); 
     ylabel('Amplitude');
     yline(threshold, 'r-', 'Threshold')
     title('ACF of unvoiced');
 
-    subplot(4, 2, [5, 6]);
+    subplot(5, 2, [5, 6]);
     yplot = F;
     yplot(yplot==0)=nan;
     plot(F_time, yplot,  '.');
@@ -143,7 +150,15 @@ for i = 1 : length(listAudio)
     nameTitle = "Pitch Contour, " + "Mean = " + num2str(meanF0) + ", Std = " + num2str(stdF0);
     title(nameTitle);
 
-    subplot(4, 2, [7, 8]); 
+    subplot(5, 2, [7, 8]);
+    yplot = filtered_F0;
+    yplot(yplot==0)=nan;
+    plot(F_time, yplot,  '.');
+    xlabel('Time(s)'); 
+    ylabel('F0(Hz)');
+    title('Pitch Contour after using median filter');
+
+    subplot(5, 2, [9, 10]); 
     plot(t, speechSignal); 
     xlabel('Times(s)'); 
     ylabel('Amplitude'); 
